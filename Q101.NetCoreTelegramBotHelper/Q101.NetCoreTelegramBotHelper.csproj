@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageProjectUrl>https://github.com/Axelweaver/q101-netcore-telegram-bot-helper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Axelweaver/q101-netcore-telegram-bot-helper</RepositoryUrl>
+    <Authors>Alexei Tkachev</Authors>
+    <Company>Q101</Company>
+    <Product>NetCoreTelegramBotHelper</Product>
   </PropertyGroup>
 
   <ItemGroup>
