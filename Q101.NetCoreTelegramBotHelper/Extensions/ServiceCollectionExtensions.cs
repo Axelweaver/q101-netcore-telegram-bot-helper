@@ -16,7 +16,7 @@ namespace Q101.NetCoreTelegramBotHelper.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection RegisterServices(this IServiceCollection services)
+        public static IServiceCollection AddQ101TelegramBotHelper(this IServiceCollection services)
         {
 
             services.AddTransient<ITelegramBotHelperConfig, TelegramBotHelperConfig>();
