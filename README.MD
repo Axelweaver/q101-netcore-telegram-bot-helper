@@ -260,9 +260,9 @@ class Program
 
         var chatId = "yourChatId";
 
-        await _telegramBotHelper.SendSimpleMessage(chatId, "Test text message");
+        await telegramHelper.SendSimpleMessage(chatId, "Test text message");
 
-        await _telegramBotHelper.SendPhoto(chatId, @"C:\photo.jpg");
+        await telegramHelper.SendPhoto(chatId, @"C:\photo.jpg");
     }
 }
 
