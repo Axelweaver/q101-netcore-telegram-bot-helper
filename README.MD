@@ -235,9 +235,9 @@ public class TelegramBotHelperConfig : ITelegramBotHelperConfig
     /// </summary>
     public string HttpProxyUserPassword { get; set; }
 
-    public TelegramBotHelperConfig()
+    public TelegramBotHelperConfig(string token)
     {
-        Token = "Here you bot token";
+        Token = token;
     }
 }
 
@@ -254,7 +254,7 @@ class Program
     static async Task Main(string[] args)
     {
 
-        var telegramConfig = new TelegramBotHelperConfig();
+        var telegramConfig = new TelegramBotHelperConfig("YorTelegramBotToken");
 
         var telegramHelper = new TelegramBotHelper(telegramConfig);
 
