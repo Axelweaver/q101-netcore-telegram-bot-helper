@@ -43,6 +43,11 @@ public class TelegramBotHelperConfig : ITelegramBotHelperConfig
     public string HttpProxyHost { get; set; }
 
     /// <summary>
+    /// User SSL for proxy
+    /// </summary>
+    public bool HttpProxyUseSsl { get; set; }	
+
+    /// <summary>
     /// Optional proxy
     /// </summary>
     public string HttpProxyPort { get; set; }
@@ -209,6 +214,11 @@ public class TelegramBotHelperConfig : ITelegramBotHelperConfig
     /// Optional proxy host
     /// </summary>
     public string HttpProxyHost { get; set; }
+
+    /// <summary>
+    /// User SSL for proxy
+    /// </summary>
+    public bool HttpProxyUseSsl { get; set; }	
 
     /// <summary>
     /// Optional proxy
