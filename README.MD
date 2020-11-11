@@ -10,7 +10,7 @@
  To install this assembly (class library) on the package manager console tab, run the following command:
 ```bash
 
-Install-Package Q101.NetCoreTelegramBotHelper -Version 1.0.1
+Install-Package Q101.NetCoreTelegramBotHelper -Version 1.0.2
 
 ```
 
@@ -22,45 +22,44 @@ You must create a class that inherits from ITelegramBotHelperConfig
 
 ```cs
 
+/// <summary>
+/// Configure bot helper
+/// </summary>
+public class TelegramBotHelperConfig : ITelegramBotHelperConfig
+{
     /// <summary>
-    /// Configure bot helper
+    /// The token looks something like 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
     /// </summary>
-    public class TelegramBotHelperConfig : ITelegramBotHelperConfig
+    public string Token { get; set; }
+
+    /// <summary>
+    /// Optional base url (Default https://api.telegram.org/bot )
+    /// </summary>
+    public string BaseUrl { get; set; }
+
+    /// <summary>
+    /// Optional proxy host
+    /// </summary>
+    public string HttpProxyHost { get; set; }
+
+    /// <summary>
+    /// Optional proxy
+    /// </summary>
+    public string HttpProxyPort { get; set; }
+
+    /// <summary>
+    /// Optional login
+    /// </summary>
+    public string HttpProxyUserName { get; set; }
+
+    /// <summary>
+    /// Optional password
+    /// </summary>
+    public string HttpProxyUserPassword { get; set; }
+
+    public TelegramBotHelperConfig()
     {
-        /// <summary>
-        /// The token looks something like 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
-        /// </summary>
-        public string Token { get; set; }
-
-        /// <summary>
-        /// Optional base url (Default https://api.telegram.org/bot )
-        /// </summary>
-        public string BaseUrl { get; set; }
-
-        /// <summary>
-        /// Optional proxy host
-        /// </summary>
-        public string HttpProxyHost { get; set; }
-
-        /// <summary>
-        /// Optional proxy
-        /// </summary>
-        public string HttpProxyPort { get; set; }
-
-        /// <summary>
-        /// Optional login
-        /// </summary>
-        public string HttpProxyUserName { get; set; }
-
-        /// <summary>
-        /// Optional password
-        /// </summary>
-        public string HttpProxyUserPassword { get; set; }
-		
-		public TelegramBotHelperConfig()
-		{
-			Token = "Here you bot token";
-		}
+        Token = "Here you bot token";
     }
 }
 
@@ -72,16 +71,16 @@ Then you need to register the dependencies
 		
 		...
 		
-		public void RegisterServices(IServiceCollection services)
-		{
-		
-			...
+    public void RegisterServices(IServiceCollection services)
+    {
+
+        ...
 			
-			// Here you specify the type of class that you created earlier for configuration
-			services.AddQ101TelegramBotHelper<TelegramBotHelperConfig>();
-			
-			...
-		}
+        // Here you specify the type of class that you created earlier for configuration
+        services.AddQ101TelegramBotHelper<TelegramBotHelperConfig>();
+
+        ...
+    }
 
 ```
 
@@ -94,26 +93,26 @@ or
 using Microsoft.Extensions.DependencyInjection;
 
 ...
+/// <summary>
+/// Main program class
+/// </summary>
+class Program
+{
     /// <summary>
-    /// Main program class
+    /// Entry point to application
     /// </summary>
-    class Program
+    /// <param name="args"></param>
+    static async Task Main(string[] args)
     {
-        /// <summary>
-        /// Entry point to application
-        /// </summary>
-        /// <param name="args"></param>
-        static async Task Main(string[] args)
-        {
 
-			var services = new ServiceCollection()
-				.AddQ101TelegramBotHelper<TelegramBotHelperConfig>()
-				.BuildServiceProvider(true);
-				
-			...
+        var services = new ServiceCollection()
+            .AddQ101TelegramBotHelper<TelegramBotHelperConfig>()
+            .BuildServiceProvider(true);
 
-        }
+        ...
+
     }
+}
  ...
 
 ```
@@ -123,20 +122,20 @@ Then you can do dependency injection into any of your class such as controller c
 
 ```cs
 
+/// <summary>
+/// Your awesome class
+/// </summary>
+public class YourAwesomeClass
+{
+    private readonly ITelegramBotHelper _telegramBotHelper;
+
     /// <summary>
-    /// Your awesome class
-    /// </summary>
-    public class YourAwesomeClass
+    /// ctor
+    /// </summary>		
+    public YourAwesomeClass(ITelegramBotHelper telegramBotHelper)
     {
-		private readonly ITelegramBotHelper _telegramBotHelper;
-		
-		/// <summary>
-		/// ctor
-		/// </summary>		
-		public YourAwesomeClass(ITelegramBotHelper telegramBotHelper)
-		{
-			_telegramBotHelper = telegramBotHelper;
-		}
+        _telegramBotHelper = telegramBotHelper;
+    }
 		
 		...
 
@@ -148,40 +147,40 @@ And use helper methods
 ```cs
 
 ...
-    /// <summary>
-    /// Your awesome class
-    /// </summary>
-    public class YourAwesomeClass
-    {
-		private readonly ITelegramBotHelper _telegramBotHelper;
-		
-		/// <summary>
-		/// ctor
-		/// </summary>		
-		public YourAwesomeClass(ITelegramBotHelper telegramBotHelper)
-		{
-			_telegramBotHelper = telegramBotHelper;
-		}
-		
-		/// <summary>
-		/// Send message to telegram chat by your bot
-		/// </summary>			
-		public async Task<ApiResponseDtoModel<MessageDtoModel>> SendMessage(string chatId, string message)
-		{
-			var response = await _telegramBotHelper.SendSimpleMessage(chatId, message);
-			
-			return response;
-		}
+/// <summary>
+/// Your awesome class
+/// </summary>
+public class YourAwesomeClass
+{
+    private readonly ITelegramBotHelper _telegramBotHelper;
 
-		/// <summary>
-		/// Send photo to chat by your bot
-		/// </summary>			
-		public async Task<ApiResponseDtoModel<MessageDtoModel>> SendPhoto(string chatId, string photoFilePath)
-		{
-			var response = await _telegramBotHelper.SendPhoto(chatId, photoFilePath);
-			
-			return response;		
-		}
+    /// <summary>
+    /// ctor
+    /// </summary>		
+    public YourAwesomeClass(ITelegramBotHelper telegramBotHelper)
+    {
+        _telegramBotHelper = telegramBotHelper;
+    }
+
+    /// <summary>
+    /// Send message to telegram chat by your bot
+    /// </summary>			
+    public async Task<ApiResponseDtoModel<MessageDtoModel>> SendMessage(string chatId, string message)
+    {
+        var response = await _telegramBotHelper.SendSimpleMessage(chatId, message);
+
+        return response;
+    }
+
+    /// <summary>
+    /// Send photo to chat by your bot
+    /// </summary>			
+    public async Task<ApiResponseDtoModel<MessageDtoModel>> SendPhoto(string chatId, string photoFilePath)
+    {
+        var response = await _telegramBotHelper.SendPhoto(chatId, photoFilePath);
+
+        return response;
+    }
 		
 		...
 

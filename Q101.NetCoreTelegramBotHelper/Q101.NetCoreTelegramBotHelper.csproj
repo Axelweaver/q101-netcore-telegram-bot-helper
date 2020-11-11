@@ -7,7 +7,8 @@
     <Authors>Alexei Tkachev</Authors>
     <Company>Q101</Company>
     <Product>NetCoreTelegramBotHelper</Product>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
+    <Description>This library allows you to send messages on behalf of the bot to Telegram chats and channels, as well as photos</Description>
   </PropertyGroup>
 
   <ItemGroup>
