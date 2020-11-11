@@ -185,3 +185,33 @@ public class YourAwesomeClass
 		...
 
 ```
+
+#### Simple example without using dependency injection
+
+```cs
+
+/// <summary>
+/// Main program class
+/// </summary>
+class Program
+{
+    /// <summary>
+    /// Entry point to application
+    /// </summary>
+    /// <param name="args"></param>
+    static async Task Main(string[] args)
+    {
+
+        var telegramConfig = new TelegramBotHelperConfig();
+
+        var telegramHelper = new TelegramBotHelper(telegramConfig);
+
+        var chatId = "yourChatId";
+
+        await _telegramBotHelper.SendSimpleMessage(chatId, "Test text message");
+
+        await _telegramBotHelper.SendPhoto(chatId, @"C:\photo.jpg");
+    }
+}
+
+```
