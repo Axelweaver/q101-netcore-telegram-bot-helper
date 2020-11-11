@@ -21,6 +21,11 @@
         string HttpProxyHost { get; set; }
 
         /// <summary>
+        /// Use SSL for proxy
+        /// </summary>
+        bool HttpProxyUseSsl { get; set; }
+
+        /// <summary>
         /// Optional proxy
         /// </summary>
         string HttpProxyPort { get; set; }

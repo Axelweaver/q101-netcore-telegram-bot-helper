@@ -54,7 +54,7 @@ namespace Q101.NetCoreTelegramBotHelper.Concrete
         {
             var url = $"{_telegramBotHelperConfig.BaseUrl}{_telegramBotHelperConfig.Token}/sendphoto";
 
-            using (var httpClient = new HttpClient())
+            using (var httpClient = GetHttpClient())
             {
                 var formData = new MultipartFormDataContent();
 
@@ -62,20 +62,11 @@ namespace Q101.NetCoreTelegramBotHelper.Concrete
 
                 formData.Add(new ByteArrayContent(bytes, 0, bytes.Length), "photo", fileName);
 
-                using (var request = await httpClient.PostAsync(url, formData))
+                using (var response = await httpClient.PostAsync(url, formData))
                 {
-                    var responseContent = request.Content.ReadAsStringAsync().Result;
-
-                    if (!request.IsSuccessStatusCode)
-                    {
-                        throw new Exception(
-                            $"Server error response:\n{request.StatusCode} {request.ReasonPhrase}\n{responseContent}");
-                    }
-
                     var responseObject =
-                        JsonConvert.DeserializeObject<ApiResponseDtoModel<MessageDtoModel>>(
-                            responseContent,
-                            new UnixDateTimeConverter());
+                        await GetResponseObject<ApiResponseDtoModel<MessageDtoModel>>(
+                            response);
 
                     return responseObject;
                 }
@@ -122,20 +113,12 @@ namespace Q101.NetCoreTelegramBotHelper.Concrete
 
                 var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                using (var request = await httpClient.PostAsync(requestUri, requestContent))
+                using (var response = await httpClient.PostAsync(requestUri, requestContent))
                 {
-                    var responseContent = request.Content.ReadAsStringAsync().Result;
-
-                    if (!request.IsSuccessStatusCode)
-                    {
-                        throw new Exception(
-                            $"Server error response:\n{request.StatusCode} {request.ReasonPhrase}\n{responseContent}");
-                    }
 
                     var responseObject =
-                        JsonConvert.DeserializeObject<ApiResponseDtoModel<MessageDtoModel>>(
-                            responseContent,
-                            new UnixDateTimeConverter());
+                        await GetResponseObject<ApiResponseDtoModel<MessageDtoModel>>(
+                            response);
 
                     return responseObject;
                 }
@@ -153,6 +136,23 @@ namespace Q101.NetCoreTelegramBotHelper.Concrete
             return await SendMessage(message);
         }
 
+        private async Task<T> GetResponseObject<T>(HttpResponseMessage response)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(
+                    $"Server error response:\n{response.StatusCode} {response.ReasonPhrase}\n{responseContent}");
+            }
+
+            var responseObject =
+                JsonConvert.DeserializeObject<T>(
+                    responseContent,
+                    new UnixDateTimeConverter());
+
+            return responseObject;
+        }
 
         private SendMessageDtoModel GetSendMessageDtoModel(string chatId,
                                                            string text,
@@ -174,13 +174,17 @@ namespace Q101.NetCoreTelegramBotHelper.Concrete
 
         private HttpClient GetHttpClient()
         {
+            var httpScheme = _telegramBotHelperConfig.HttpProxyUseSsl
+                ? "https://"
+                : "http://";
+
             var proxy =
                 string.IsNullOrEmpty(_telegramBotHelperConfig.HttpProxyHost)
                     ? null
                     : new WebProxy
                     {
                         Address = new Uri(
-                            $"http://{_telegramBotHelperConfig.HttpProxyHost}:{_telegramBotHelperConfig.HttpProxyPort}"),
+                            $"{httpScheme}{_telegramBotHelperConfig.HttpProxyHost}:{_telegramBotHelperConfig.HttpProxyPort}"),
                         BypassProxyOnLocal = false,
                         UseDefaultCredentials = false,
                         Credentials = string.IsNullOrEmpty(_telegramBotHelperConfig.HttpProxyUserName)
